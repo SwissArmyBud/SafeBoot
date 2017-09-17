@@ -1,0 +1,39 @@
+echo "Installing the SafeBoot system...."
+echo " -- Basic Startup --"
+setenv bootdelay 3
+setenv preboot echo ""; echo ${motd}; echo "";
+setenv motd "-----  Welcome to the SafeBoot System  -----"
+setenv bootcmd=run safeboot; run piboot;
+echo " -- Script Functions --"
+setenv load_script load mmc 0:1 ${script_addr} ${script_name}; source ${script_addr};
+setenv script_addr 0x02000000
+setenv script_name uboot.scr
+echo " -- Startup Process --"
+setenv piboot run setbootargs; run loadmmc; bootz ${kernel_addr_r} - ${fdt_addr_r}
+setenv setbootargs setenv bootargs ${core_args} root=${bootdevice}${bootpart}; if itest ${enableconsole} == 1; then setenv bootargs ${bootargs} console=${serialport},${baudrate}; fi;
+setenv core_args rootwait
+setenv serialport ttyS0
+setenv baudrate 115200
+setenv bootdevice /dev/mmcblk0p
+setenv bootpart 2
+setenv enableconsole 1
+echo " -- Kernel/FDT Loading --"
+setenv loadmmc run loadfdt; run loadkernel;
+setenv loadfdt fatload mmc 0:1 ${fdt_addr_r} ${fdt_file}
+setenv fdt_addr_r 0x02000000
+setenv fdt_file bcm2710-rpi-3-b.dtb
+setenv loadkernel fatload mmc 0:1 ${kernel_addr_r} ${kernel_file}
+setenv kernel_addr_r 0x01000000
+setenv kernel_file kernel7.img
+echo " -- SafeBoot Process --"
+setenv safeboot run gpiocheck; run countercheck;
+setenv recoverypart 3
+setenv gpiocheck gpio input ${gpio_test_pin}; if itest $? == 0; then setenv bootpart ${recoverypart}; fi;
+setenv gpio_test_pin 4
+setenv countercheck setexpr bootcount ${bootcount} + 1; if itest ${bootcount} > ${bootlimit}; then setenv bootpart ${recoverypart}; fi;
+setenv bootcount 0
+setenv bootlimit 3
+echo " -- Saving... --"
+saveenv
+echo " -- FINISHED! --"
+reset

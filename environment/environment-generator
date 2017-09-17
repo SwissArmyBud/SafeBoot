@@ -1,0 +1,3 @@
+#!/bin/bash
+mkenvimage -s 0x4000 -o uboot.env safeboot.ube
+echo "Finished!"

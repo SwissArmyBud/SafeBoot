@@ -1,0 +1,6 @@
+#!/bin/bash
+for file in *.ubs
+do
+mkimage -T script -C none -n 'UBoot Script Autogen Output' -d $file "${file%.ubs}.img"
+done
+echo "Finished!"
