@@ -24,3 +24,4 @@ SafeBoot can be installed over a pre-existing system by using the provided scrip
     - Default bootlimit (boot failure limit before SafeBoot forces recovery)
     - Serial port settings (port/rate/enabled)
   - SafeBoot includes a GPIO check, recovery can be forced by shorting a 5K resistor from ground to the test pin.
+  - Once the system is booted a call to [fw_setenv](http://elinux.org/U-boot_environment_variables_in_linux#Setting_and_verifying_an_environment_variable) MUST be made to reset the boot counter, otherwise the system will enter recovery mode. The user may chose how/when/why to call this and whether to decrement or reset the counter. Any script/language/interpreter that can make a simple system call can perform this function.
