@@ -13,4 +13,14 @@ SafeBoot can be installed over a pre-existing system by using the provided scrip
     - Raspberry Pi or Compute Module
     - Compiled UBoot binary for SoC
 
-
+## Using
+    - Ensure that the config.txt points to the UBoot binary when booting.
+    - Either use the environment file or run the script to load SafeBoot.
+    - Ensure that the following values are set correctly for your layout:
+        - Kernel name
+        - FDT name
+        - Default bootpart (boot partition)
+        - Default recoverypart (recovery partition)
+        - Default bootlimit (boot failure limit before SafeBoot forces recovery)
+        - Serial port settings (port/rate/enabled)
+    - SafeBoot includes a GPIO check, recovery can be forced by shorting a 5K resistor from ground to the test pin.
